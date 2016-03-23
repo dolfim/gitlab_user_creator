@@ -21,7 +21,6 @@ remote_app = oauth.remote_app('remote_app',
 )
 oauth.init_app(app)
 
-# remote_app._client = flask_oauth.OAuthClient(remote_app._consumer, ca_certs='comp-phys-git.pem')
 
 @remote_app.tokengetter
 def get_gitlab_token():
