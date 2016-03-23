@@ -1,9 +1,11 @@
 from flask import Flask, flash, redirect, render_template, \
      request, url_for, session, abort
 from flask_oauthlib.client import OAuth, parse_response
-from wtforms import Form, BooleanField, TextField, PasswordField, validators
+from wtforms import Form, TextField, validators
+from wtforms.fields.html5 import EmailField
 
 import requests
+import random_password
 
 app = Flask(__name__)
 app.config.from_pyfile('settings.cfg')#, silent=True)
@@ -74,7 +76,7 @@ def oauth_authorized():
 class RegistrationForm(Form):
     name = TextField('Name', [validators.Required()], render_kw={"placeholder": "Name"})
     username = TextField('Username', [validators.Required()], render_kw={"placeholder": "Username"})
-    email = TextField('Email Address', [validators.Required()], render_kw={"placeholder": "Email"})
+    email = EmailField('Email Address', [validators.Required(), validators.Email()], render_kw={"placeholder": "Email"})
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -86,16 +88,18 @@ def index():
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
         data = {}
-        data['name'] = form.name
-        data['username'] = form.username
-        data['email'] = form.email
+        data['name'] = form.name.data
+        data['username'] = form.username.data
+        data['email'] = form.email.data
         data['project_limit'] = 0
         data['external'] = True
+        data['password'] = random_password.random_password()
+        
         r = requests.post('https://git.comp.phys.ethz.ch/api/v3/users', data=data, headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_KEY']})
         if r.status_code == 201:
-            flash('The user {} has been successfully created.'.format(form.username), 'success')
+            flash('The user {} has been successfully created.'.format(form.username.data), 'success')
         else:
-            flash('Problems when creating the user: '+r.json()['message'], 'error')
+            flash('Problems when creating the user: {}'.format(r.json()['message']), 'error')
     
     return render_template('index.html', form=form, user=session['gitlab_user'])
 
