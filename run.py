@@ -39,16 +39,17 @@ def oauth_authorized():
         flash(u'You denied the request to sign in.')
         return redirect(next_url)
     
-    print 'You are signed in.'
-    r = remote_app.get('user')
+    print 'You are signed in. Token is', resp['access_token']
+    r = remote_app.get('user', token=(resp['access_token'],''))
     if r.status != 200:
         abort(401)
+    user = r.data
+    if user['external']:
+        flash('The user %s is flagged as external.' % user['username'], 'error')
     
-    print r.data
     session['gitlab_token'] = (resp['access_token'], '')
-    # session['twitter_user'] = resp['screen_name']
-    username = 'mytest'
-    flash('You were signed in as %s' % username)
+    session['gitlab_user'] = user['username']
+    flash('You were signed in as %s' % session['gitlab_user'])
     return redirect(next_url)
 
 
