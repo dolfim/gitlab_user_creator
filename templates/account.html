@@ -1,16 +1,11 @@
 {% extends "base.html" %}
-{% import "utils.html" as utils %}
-
-{% block title %}Group External Users Creation{% endblock %}
 
 {% block content %}
 
-{{ utils.flashed_messages() }}
-
-  <h1>Account</h1>
+  <h1>Gitlab Account</h1>
   
   {% if logged_in %}
-  <p>You are logged in. <a href="{{ url_for('logout') }}">Logout &gt;</a></p>
+  <p>You are logged in as {{ user.username }}. <a href="{{ url_for('logout') }}">Logout &gt;</a></p>
   {% else %}
   <p>You are not logged in.</p>
   <p class="text-center"><a class="btn btn-primary btn-lg" href="{{ url_for('login', next=next_url) }}">Login with Gitlab</a></p>

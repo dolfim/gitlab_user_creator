@@ -32,7 +32,8 @@ def get_gitlab_token():
 def account():
     logged_in = get_gitlab_token() is not None
     next_url = request.args.get('next') or request.referrer
-    return render_template('account.html', logged_in=logged_in, next_url=next_url)
+    user = session['gitlab_user'] if 'gitlab_user' in session else None
+    return render_template('account.html', logged_in=logged_in, next_url=next_url, user=user)
 
 @app.route('/account/login')
 def login():
@@ -41,8 +42,7 @@ def login():
 
 @app.route('/account/logout')
 def logout():
-    session['gitlab_token'] = None
-    session['gitlab_user'] = None
+    session.clear()
     flash(u'You logged out successfully.')
     return redirect(url_for('account'))
 
@@ -55,17 +55,20 @@ def oauth_authorized():
         flash(u'You denied the request to sign in.')
         return redirect(next_url)
     
-    print 'You are signed in. Token is', resp['access_token']
     r = remote_app.get('user', token=(resp['access_token'],''))
     if r.status != 200:
-        abort(401)
+        flash(u'Request of /user information failed.', 'error')
+        print r.text
+        return redirect(next_url)
+    
     user = r.data
     if user['external']:
         flash('The user %s is flagged as external.' % user['username'], 'error')
+        return redirect(next_url)
     
     session['gitlab_token'] = (resp['access_token'], '')
-    session['gitlab_user'] = user['username']
-    flash('You were signed in as %s' % session['gitlab_user'])
+    session['gitlab_user'] = user
+    flash('You were signed in as %s' % user['username'])
     return redirect(next_url)
 
 
@@ -78,7 +81,7 @@ class RegistrationForm(Form):
 def index():
     token = get_gitlab_token()
     if token is None:
-        redirect(url_for('account', next='index'))
+        return redirect(url_for('account', next=url_for('index')))
     
     
     form = RegistrationForm(request.form)
@@ -95,7 +98,7 @@ def index():
         else:
             flash('Problems when creating the user: '+r.json()['message'], 'error')
     
-    return render_template('index.html', form=form)
+    return render_template('index.html', form=form, user=session['gitlab_user'])
 
 # @app.route('/login', methods=['GET', 'POST'])
 # def login():

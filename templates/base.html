@@ -1,8 +1,9 @@
+{% import "utils.html" as utils %}
 <!DOCTYPE html>
 <html{% block html_attribs %}{% endblock html_attribs %}>
   <head>
     {%- block head %}
-    <title>{% block title %}{{title|default}}{% endblock title %}</title>
+    <title>{% block title %}Group External Users Creation{% endblock title %}</title>
 
     {%- block metas %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,8 +19,13 @@
     {% block body -%}
     {% block navbar %}
     {%- endblock navbar %}
+    {% block container -%}
+    <div class="container">
+    {{ utils.flashed_messages() }}
     {% block content -%}
     {%- endblock content %}
+    </div>
+    {%- endblock container %}
 
     {% block scripts %}
     <script src="{{ url_for('static', filename='jquery.js') }}"></script>
