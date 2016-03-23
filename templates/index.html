@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "utils.html" as utils %}
+{% import "wtf.html" as wtf %}
 
 {% block title %}Group External Users Creation{% endblock %}
 
@@ -7,5 +8,27 @@
 
 {{ utils.flashed_messages() }}
 
-  <h1>Hello, Bootstrap</h1>
+  <h1>Group External Users Creation</h1>
+  
+<form method="POST">
+  {{ wtf.form_errors(form, hiddens="only") }}
+
+  {{ wtf.form_field(form.name) }}
+  {{ wtf.form_field(form.username) }}
+  {{ wtf.form_field(form.email) }}
+  
+  <!-- <div class="form-group">
+    <label for="exampleInputName">{{ form.name.label }} </label>
+    <input type="text" class="form-control" id="exampleInputName" placeholder="Name" name="name">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputUsername">Username</label>
+    <input type="text" class="form-control" id="exampleInputUsername" placeholder="Username" name="username">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail">Email address</label>
+    <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email" name="email">
+  </div> -->
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
 {% endblock %}

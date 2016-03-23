@@ -1,6 +1,8 @@
 from flask import Flask, flash, redirect, render_template, \
      request, url_for, session, abort
 from flask_oauthlib.client import OAuth, parse_response
+from wtforms import Form, BooleanField, TextField, PasswordField, validators
+
 import requests
 
 app = Flask(__name__)
@@ -67,12 +69,33 @@ def oauth_authorized():
     return redirect(next_url)
 
 
-@app.route('/')
+class RegistrationForm(Form):
+    name = TextField('Name', [validators.Required()], render_kw={"placeholder": "Name"})
+    username = TextField('Username', [validators.Required()], render_kw={"placeholder": "Username"})
+    email = TextField('Email Address', [validators.Required()], render_kw={"placeholder": "Email"})
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
     token = get_gitlab_token()
     if token is None:
         redirect(url_for('account', next='index'))
-    return render_template('index.html')
+    
+    
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
+        data = {}
+        data['name'] = form.name
+        data['username'] = form.username
+        data['email'] = form.email
+        data['project_limit'] = 0
+        data['external'] = True
+        r = requests.post('https://git.comp.phys.ethz.ch/api/v3/users', data=data, headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_KEY']})
+        if r.status_code == 201:
+            flash('The user {} has been successfully created.'.format(form.username), 'success')
+        else:
+            flash('Problems when creating the user: '+r.json()['message'], 'error')
+    
+    return render_template('index.html', form=form)
 
 # @app.route('/login', methods=['GET', 'POST'])
 # def login():
