@@ -25,10 +25,24 @@ oauth.init_app(app)
 def get_gitlab_token():
     return session.get('gitlab_token')
 
-@app.route('/login')
+
+@app.route('/account')
+def account():
+    logged_in = get_gitlab_token() is not None
+    next_url = request.args.get('next') or request.referrer
+    return render_template('account.html', logged_in=logged_in, next_url=next_url)
+
+@app.route('/account/login')
 def login():
     return remote_app.authorize(callback=url_for('oauth_authorized', _external=True,
         next=request.args.get('next') or request.referrer or None))
+
+@app.route('/account/logout')
+def logout():
+    session['gitlab_token'] = None
+    session['gitlab_user'] = None
+    flash(u'You logged out successfully.')
+    return redirect(url_for('account'))
 
 # @remote_app.authorized_handler
 @app.route('/oauth-authorized')
@@ -55,6 +69,9 @@ def oauth_authorized():
 
 @app.route('/')
 def index():
+    token = get_gitlab_token()
+    if token is None:
+        redirect(url_for('account', next='index'))
     return render_template('index.html')
 
 # @app.route('/login', methods=['GET', 'POST'])
