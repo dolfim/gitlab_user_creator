@@ -1,5 +1,5 @@
 from flask import Flask, flash, redirect, render_template, \
-     request, url_for, session, abort
+     request, url_for, session
 from flask_oauthlib.client import OAuth, parse_response
 from wtforms import Form, TextField, validators, PasswordField
 from wtforms.fields.html5 import EmailField
@@ -8,7 +8,7 @@ from wtforms.csrf.session import SessionCSRF
 import requests, json
 
 app = Flask(__name__)
-app.config.from_pyfile('settings.cfg')#, silent=True)
+app.config.from_pyfile('settings.cfg')
 
 app.secret_key = 'some_secret'
 

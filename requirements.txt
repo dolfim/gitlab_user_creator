@@ -1,4 +1,4 @@
 Flask
 Flask-OAuthlib
-Flask-WTF
+WTForms
 requests
