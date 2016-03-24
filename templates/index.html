@@ -19,12 +19,16 @@
   <p class="lead">You are currently logged in as {{ user.username }}.</p>
   
 <form method="POST" class="form-create">
+  {{ form.csrf_token }}
+  
   {{ wtf.form_errors(form, hiddens="only") }}
 
   {{ wtf.form_field(form.name) }}
   {{ wtf.form_field(form.username) }}
   {{ wtf.form_field(form.email) }}
+  {{ wtf.form_field(form.password) }}
+  {{ wtf.form_field(form.confirm) }}
   
-  <button type="submit" class="btn btn-primary">Create</button>
+  <button type="submit" class="btn btn-primary form-control">Create</button>
 </form>
 {% endblock %}

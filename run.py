@@ -1,8 +1,9 @@
 from flask import Flask, flash, redirect, render_template, \
      request, url_for, session, abort
 from flask_oauthlib.client import OAuth, parse_response
-from wtforms import Form, TextField, validators
+from wtforms import Form, TextField, validators, PasswordField
 from wtforms.fields.html5 import EmailField
+from wtforms.csrf.session import SessionCSRF
 
 import requests
 import random_password
@@ -77,6 +78,16 @@ class RegistrationForm(Form):
     name = TextField('Name', [validators.Required()], render_kw={"placeholder": "Name"})
     username = TextField('Username', [validators.Required()], render_kw={"placeholder": "Username"})
     email = EmailField('Email Address', [validators.Required(), validators.Email()], render_kw={"placeholder": "Email"})
+    password = PasswordField('Initial Password', [
+        validators.Required(),
+        validators.EqualTo('confirm', message='Passwords must match')
+    ], render_kw={"placeholder": "Password"})
+    confirm = PasswordField('Repeat Password', render_kw={"placeholder": "Password"})
+    
+    class Meta:
+        csrf = True
+        csrf_secret = app.config['CSRF_SECRET']
+    
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -85,7 +96,7 @@ def index():
         return redirect(url_for('account', next=url_for('index')))
     
     
-    form = RegistrationForm(request.form)
+    form = RegistrationForm(request.form, meta={'csrf_context': session})
     if request.method == 'POST' and form.validate():
         data = {}
         data['name'] = form.name.data
@@ -93,7 +104,8 @@ def index():
         data['email'] = form.email.data
         data['project_limit'] = 0
         data['external'] = True
-        data['password'] = random_password.random_password()
+        # data['confirm'] = False
+        data['password'] = form.password.data
         
         r = requests.post('https://git.comp.phys.ethz.ch/api/v3/users', data=data, headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_KEY']})
         if r.status_code == 201:
