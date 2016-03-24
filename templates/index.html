@@ -16,7 +16,7 @@
 
   <h1>Group External Users Creation</h1>
   
-  <p class="lead">You are currently logged in as {{ user.username }}.</p>
+  <p class="lead">You are currently logged in as {{ user.username }}. <span class="small"><a href="{{ url_for('logout') }}">Logout <span class="small glyphicon glyphicon-log-out"></span></a></span></p>
   
 <form method="POST" class="form-create">
   {{ form.csrf_token }}
