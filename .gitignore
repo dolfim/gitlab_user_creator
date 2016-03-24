@@ -1,3 +1,4 @@
 *.pyc
+*.pem
 venv
 settings.cfg
