@@ -6,7 +6,6 @@ from wtforms.fields.html5 import EmailField
 from wtforms.csrf.session import SessionCSRF
 
 import requests, json
-import random_password
 
 app = Flask(__name__)
 app.config.from_pyfile('settings.cfg')#, silent=True)
