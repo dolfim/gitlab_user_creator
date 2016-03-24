@@ -102,7 +102,7 @@ def index():
         data['name'] = form.name.data
         data['username'] = form.username.data
         data['email'] = form.email.data
-        data['project_limit'] = 0
+        data['projects_limit'] = 0
         data['external'] = True
         # data['confirm'] = False
         data['password'] = form.password.data
