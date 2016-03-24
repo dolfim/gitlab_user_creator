@@ -48,7 +48,6 @@ def logout():
     flash(u'You logged out successfully.')
     return redirect(url_for('account'))
 
-# @remote_app.authorized_handler
 @app.route('/oauth-authorized')
 def oauth_authorized():
     resp = remote_app.authorized_response()
