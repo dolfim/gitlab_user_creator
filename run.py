@@ -14,10 +14,10 @@ app.secret_key = 'some_secret'
 
 oauth = OAuth()
 remote_app = oauth.remote_app('remote_app',
-    base_url='https://git.comp.phys.ethz.ch/api/v3/',
+    base_url=app.config['GITLAB_BASE']+'/api/v3/',
     request_token_url=None,
-    access_token_url='https://git.comp.phys.ethz.ch/oauth/token',
-    authorize_url='https://git.comp.phys.ethz.ch/oauth/authorize',
+    access_token_url=app.config['GITLAB_BASE']+'/oauth/token',
+    authorize_url=app.config['GITLAB_BASE']+'/oauth/authorize',
     app_key='GITLAB',
     access_token_method='POST'
 )
@@ -100,12 +100,12 @@ def index():
         data['name'] = form.name.data
         data['username'] = form.username.data
         data['email'] = form.email.data
+        data['password'] = form.password.data
         data['projects_limit'] = 0
         data['external'] = True
-        data['password'] = form.password.data
         
-        r = requests.post('https://git.comp.phys.ethz.ch/api/v3/users', data=json.dumps(data),
-                          headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_KEY'], 'content-type': 'application/json'})
+        r = requests.post(app.config['GITLAB_BASE']+'/api/v3/users', data=json.dumps(data),
+                          headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_TOKEN'], 'content-type': 'application/json'})
         if r.status_code == 201:
             flash('The user {} has been successfully created.'.format(form.username.data), 'success')
         else:
@@ -115,4 +115,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
