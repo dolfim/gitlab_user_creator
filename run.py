@@ -5,7 +5,7 @@ from wtforms import Form, TextField, validators, PasswordField
 from wtforms.fields.html5 import EmailField
 from wtforms.csrf.session import SessionCSRF
 
-import requests
+import requests, json
 import random_password
 
 app = Flask(__name__)
@@ -104,10 +104,10 @@ def index():
         data['email'] = form.email.data
         data['projects_limit'] = 0
         data['external'] = True
-        # data['confirm'] = False
         data['password'] = form.password.data
         
-        r = requests.post('https://git.comp.phys.ethz.ch/api/v3/users', data=data, headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_KEY']})
+        r = requests.post('https://git.comp.phys.ethz.ch/api/v3/users', data=json.dumps(data),
+                          headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_KEY'], 'content-type': 'application/json'})
         if r.status_code == 201:
             flash('The user {} has been successfully created.'.format(form.username.data), 'success')
         else:
