@@ -16,8 +16,9 @@ pip install -r requirements.txt
 
 ### Configuration
 The app expects a file ```settings.cfg``` containing the following parameters.
-| Parameter | |
-  =========
+
+| Parameter | Description |
+| --------- | ----------- |
 | GITLAB_BASE | Base URL to the Gitlab installation (without the /api/v3 part) |
 | GITLAB_CONSUMER_KEY | *Application Id* provided by Gitlab |
 | GITLAB_CONSUMER_SECRET | *Secret* provided by Gitlab |
