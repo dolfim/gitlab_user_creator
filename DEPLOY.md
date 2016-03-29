@@ -6,8 +6,8 @@ Let assume:
 
 * We deploy on Ubuntu 14.04.
 * The app will run as user ```gitlab_user_creator``` with home ```/webapps/gitlab_user_creator``` with group ```webapps```.
-* We use Gunicorn as a WSGI server, which is controlled via Supervisor.
-* We use the built-in Nginx service provided in Gitlab Omnibus.
+* We use [Gunicorn](http://gunicorn.org) as a WSGI server, which is controlled via [Supervisor](http://supervisord.org).
+* We use the built-in Nginx service provided in [Gitlab Omnibus](http://doc.gitlab.com/omnibus/).
 * The application will be served as [https://gitlabhost/myapps/external_user]().
 
 ## Application user
