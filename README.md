@@ -47,6 +47,8 @@ For this setup the *Redirect URI* in the Gitlab settings should contain somethin
 
 In production it is adviced to use some production WSGI server. Read more on the [Flask deployment documentation](http://flask.pocoo.org/docs/deploying/).
 
+## Deployment
+Example for a deployment on the same server running our local Gitlab installation is in [DEPLOY.md](DEPLOY.md).
 
 ## Copyright
 Copyright on the application belongs to the Institute for Theoretical Physics, ETH Zurich.
