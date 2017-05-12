@@ -2,13 +2,13 @@
 
 {% block content %}
 
-  <h1>Gitlab Account</h1>
+  <h1>GitLab Account</h1>
   
   {% if logged_in %}
   <p>You are logged in as {{ user.username }}. <a href="{{ url_for('logout') }}">Logout <span class="small glyphicon glyphicon-log-out"></span></a></p>
   {% else %}
   <p>You are not logged in.</p>
-  <p class="text-center"><a class="btn btn-primary btn-lg" href="{{ url_for('login', next=next_url) }}"><span class="small glyphicon glyphicon-log-in"></span> Login with Gitlab</a></p>
+  <p class="text-center"><a class="btn btn-primary btn-lg" href="{{ url_for('login', next=next_url) }}"><span class="small glyphicon glyphicon-log-in"></span> Login with GitLab</a></p>
   {% endif %}
   
 {% endblock %}

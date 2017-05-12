@@ -1,13 +1,13 @@
 # Deployment
 
-In our setup we deployed this tool on the same server running the Omnibus package of Gitlab.
+In our setup we deployed this tool on the same server running the Omnibus package of GitLab.
 
 Let assume:
 
 * We deploy on Ubuntu 14.04.
 * The app will run as user ```gitlab_user_creator``` with home ```/webapps/gitlab_user_creator``` with group ```webapps```.
 * We use [Gunicorn](http://gunicorn.org) as a WSGI server, which is controlled via [Supervisor](http://supervisord.org).
-* We use the built-in Nginx service provided in [Gitlab Omnibus](http://doc.gitlab.com/omnibus/).
+* We use the built-in Nginx service provided in [GitLab Omnibus](http://doc.gitlab.com/omnibus/).
 * The application will be served as [https://gitlabhost/myapps/external_user]().
 
 ## Application user
@@ -105,7 +105,7 @@ sudo supervisorctl update gitlab_user_creator # only needed the first time
 sudo supervisorctl restart gitlab_user_creator
 ```
 
-Second reconfigure Gitlab:
+Second reconfigure GitLab:
 ```bash
 sudo gitlab-ctl reconfigure
 ```
