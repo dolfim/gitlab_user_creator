@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 from flask import Flask, flash, redirect, render_template, \
      request, url_for, session
 from flask_oauthlib.client import OAuth, parse_response
