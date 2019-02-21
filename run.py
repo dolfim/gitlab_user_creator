@@ -132,7 +132,7 @@ class RegistrationForm(Form):
     
     class Meta:
         csrf = True
-        csrf_secret = app.config['CSRF_SECRET']
+        csrf_secret = bytearray(app.config['CSRF_SECRET'], 'utf-8')
     
 
 @app.route('/', methods=['GET', 'POST'])
