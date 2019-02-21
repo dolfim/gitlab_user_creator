@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 from flask import Flask, flash, redirect, render_template, \
      request, url_for, session
 from flask_oauthlib.client import OAuth, parse_response
@@ -106,7 +108,7 @@ def oauth_authorized():
     r = remote_app.get('user', token=(resp['access_token'],''))
     if r.status != 200:
         flash(u'Request of /user information failed.', 'error')
-        print r.text
+        print(r.text)
         return redirect(next_url)
     
     user = r.data
@@ -132,7 +134,7 @@ class RegistrationForm(Form):
     
     class Meta:
         csrf = True
-        csrf_secret = app.config['CSRF_SECRET']
+        csrf_secret = bytearray(app.config['CSRF_SECRET'], 'utf-8')
     
 
 @app.route('/', methods=['GET', 'POST'])
@@ -152,7 +154,7 @@ def index():
         data['projects_limit'] = 0
         data['external'] = True
         
-        r = requests.post(app.config['GITLAB_BASE']+'/api/v3/users', data=json.dumps(data),
+        r = requests.post(app.config['GITLAB_BASE']+'/api/v4/users', data=json.dumps(data),
                           headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_TOKEN'], 'content-type': 'application/json'})
         if r.status_code == 201:
             flash('The user {} has been successfully created.'.format(form.username.data), 'success')
