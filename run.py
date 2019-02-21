@@ -152,7 +152,7 @@ def index():
         data['projects_limit'] = 0
         data['external'] = True
         
-        r = requests.post(app.config['GITLAB_BASE']+'/api/v3/users', data=json.dumps(data),
+        r = requests.post(app.config['GITLAB_BASE']+'/api/v4/users', data=json.dumps(data),
                           headers={'PRIVATE-TOKEN': app.config['GITLAB_ADMIN_TOKEN'], 'content-type': 'application/json'})
         if r.status_code == 201:
             flash('The user {} has been successfully created.'.format(form.username.data), 'success')
