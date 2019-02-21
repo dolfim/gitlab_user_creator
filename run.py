@@ -106,7 +106,7 @@ def oauth_authorized():
     r = remote_app.get('user', token=(resp['access_token'],''))
     if r.status != 200:
         flash(u'Request of /user information failed.', 'error')
-        print r.text
+        print(r.text)
         return redirect(next_url)
     
     user = r.data
